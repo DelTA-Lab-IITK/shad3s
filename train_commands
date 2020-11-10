@@ -1,0 +1,11 @@
+direct:
+python3 train.py  --dataroot /nfs/154/dataset2/shadegan/data-single/renders/  --name direct --checkpoints_dir test_checkpoints --model direct  --dataset_mode direct --input_nc 1 --output_nc 1 --load_size 256 --crop_size 256  --batch_size 1
+
+sp:
+python3 train.py  --dataroot /nfs/154/dataset2/shadegan/data-single/renders/  --name sp --checkpoints_dir test_checkpoints --model sp  --dataset_mode sp --input_nc 1 --output_nc 1 --load_size 256 --crop_size 256  --batch_size 1
+
+sp-ws:
+python3 train.py  --dataroot /nfs/154/dataset2/shadegan/data-six/renders/  --name sp_ws --checkpoints_dir test_checkpoints --model sp_ws  --dataset_mode sp_ws --input_nc 1 --output_nc 1 --load_size 256 --crop_size 256  --batch_size 1
+
+se:
+python3 train.py  --dataroot /nfs/154/dataset2/shadegan/data-six/renders/  --name se --checkpoints_dir test_checkpoints --model se  --dataset_mode sp --input_nc 1 --output_nc 1 --load_size 256 --crop_size 256  --batch_size 1 --gpu_id 1
