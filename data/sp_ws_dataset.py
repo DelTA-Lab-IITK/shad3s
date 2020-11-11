@@ -6,12 +6,6 @@ from PIL import Image
 import json
 
 class SpWsDataset(BaseDataset):
-    """A dataset class for paired image dataset.
-
-    It assumes that the directory '/path/to/data/train' contains image pairs in the form of {A,B}.
-    During test time, you need to prepare a directory '/path/to/data/test'.
-    """
-
     def __init__(self, opt):
         """Initialize this dataset class.
 
@@ -25,6 +19,7 @@ class SpWsDataset(BaseDataset):
         self.M_paths=[]
         self.S_paths=[]
         self.K_paths=[]
+        self.texture_paths={}
         
         self.dir_AB = opt.dataroot  # get the image directory
         for i in os.listdir(self.dir_AB):
@@ -32,14 +27,15 @@ class SpWsDataset(BaseDataset):
           with open(T_path) as f:
             for line in f:
               j_content = json.loads(line)
-              texture=j_content["texture"]["name"]
-          if texture!='sha' and texture!='som':
+              tex=j_content["texture"]["name"]
+            
             self.C_paths += make_dataset(self.dir_AB+'/'+i+'/r_contour/', opt.max_dataset_size)  # get image paths
             self.G_paths += make_dataset(self.dir_AB+'/'+i+'/r_gnomon/', opt.max_dataset_size)  # get image paths
             self.H_paths += make_dataset(self.dir_AB+'/'+i+'/r_highlights/', opt.max_dataset_size)  # get image paths
             self.M_paths += make_dataset(self.dir_AB+'/'+i+'/r_midtones/', opt.max_dataset_size)  # get image paths
             self.S_paths += make_dataset(self.dir_AB+'/'+i+'/r_shades/', opt.max_dataset_size)  # get image paths
             self.K_paths += make_dataset(self.dir_AB+'/'+i+'/r_sketch_geom/', opt.max_dataset_size)  # get image paths
+            self.texture_paths[self.dir_AB+'/'+i+'/r_contour'] = opt.texture+'/'+tex+'/'  # get image paths
         self.C_paths=sorted(self.C_paths)
         self.G_paths=sorted(self.G_paths)
         self.H_paths=sorted(self.H_paths)
@@ -52,17 +48,6 @@ class SpWsDataset(BaseDataset):
         self.output_nc = self.opt.output_nc 
 
     def __getitem__(self, index):
-        """Return a data point and its metadata information.
-
-        Parameters:
-            index - - a random integer for data indexing
-
-        Returns a dictionary that contains A, B, A_paths and B_paths
-            A (tensor) - - an image in the input domain
-            B (tensor) - - its corresponding image in the target domain
-            A_paths (str) - - image paths
-            B_paths (str) - - image paths (same as A_paths)
-        """
         # read a image given a random integer index
         
         C_path = self.C_paths[index]
@@ -83,19 +68,18 @@ class SpWsDataset(BaseDataset):
            
         except:
           print("EXCEPTION:"+str(AB_path))
-        texture="zero"
         with open(T_path) as f:
             for line in f:
               j_content = json.loads(line)
               texture=j_content["texture"]["name"]
 
-        C=Image.open("/nfs/151/gpu/raghav/data/shadegan/brushes_v2/"+texture+"/high.png").convert('RGB')
+        C=Image.open(self.texture_paths[C_path.rsplit('/',1)[0]]+"high.png").convert('RGB')
         
-        D=Image.open("/nfs/151/gpu/raghav/data/shadegan/brushes_v2/"+texture+"/mid.png").convert('RGB')
+        D=Image.open(self.texture_paths[C_path.rsplit('/',1)[0]]+"mid.png").convert('RGB')
         
-        E=Image.open("/nfs/151/gpu/raghav/data/shadegan/brushes_v2/"+texture+"/shade.png").convert('RGB')
+        E=Image.open(self.texture_paths[C_path.rsplit('/',1)[0]]+"shade.png").convert('RGB')
         
-        F=Image.open("/nfs/151/gpu/raghav/data/shadegan/brushes_v2/"+texture+"/shadow.png").convert('RGB')
+        F=Image.open(self.texture_paths[C_path.rsplit('/',1)[0]]+"shadow.png").convert('RGB')
     
         transform_params = get_params(self.opt, A.size)
         A_transform = get_transform(self.opt, transform_params, grayscale=(self.input_nc == 1))
