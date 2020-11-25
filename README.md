@@ -1,4 +1,5 @@
 # SHAD3S: A model to Sketch, Shade and Shadow #
+Raghav B. Venkataramaiyer, Abhishek Joshi, Saisha Narang, Vinay P. Namboodiri
 
 [Project Page](https://bvraghav.com/shad3s/)  
 [Data](https://bvraghav.com/shad3s/data.tar.xz)  
