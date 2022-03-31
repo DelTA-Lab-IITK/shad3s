@@ -4,7 +4,7 @@ Raghav B. Venkataramaiyer, Abhishek Joshi, Saisha Narang, Vinay P. Namboodiri
 [Project Page](https://bvraghav.com/shad3s/)  
 [Data](https://bvraghav.com/shad3s/data.tar.xz)  
 [Brushes](https://bvraghav.com/shad3s/brushes_v2.tar.gz)  
-[Trained Models](https://bvraghav.com/shad3s/shad3s_checkpoints.tar.xz)
+[Trained Models](https://bvraghav.com/shad3s/shad3s_checkpoints.tar.xz)  
 [Data Synthesis Code](https://github.com/bvraghav/standible)
 
 Train and test commands available in  
